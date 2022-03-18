@@ -6,7 +6,11 @@ const teamSchema = new Schema({
   name: String,
   img: String,
   description: String,
-  creator:String,
+  creator: String,
+  leader: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+  },
   members: [
     {
       user: {

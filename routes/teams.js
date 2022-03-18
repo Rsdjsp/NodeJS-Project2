@@ -19,20 +19,13 @@ function teams(app) {
     return res.json(team);
   });
   router.post("/addMember", async (req, res) => {
-    const team = await teamsService.addMember(
-      req.body.idTeam,
-      req.body.idNewMember
-    );
-
+    const { idTeam, idNewMember } = req.body;
+    const team = await teamsService.addMember(idTeam, idNewMember);
     return res.json(team);
   });
   router.post("/changeRole", async (req, res) => {
-    const team = await teamsService.changeRole(
-      req.body.idTeam,
-      req.body.idMember,
-      req.body.newRole
-    );
-
+    const { idTeam, idMember, newRole } = req.body;
+    const team = await teamsService.changeRole(idTeam, idMember, newRole);
     return res.json(team);
   });
 }

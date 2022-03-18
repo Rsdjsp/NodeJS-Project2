@@ -8,9 +8,18 @@
     "dev": "NODE_ENV=dev npx nodemon index.js",
     "start": "node index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rsdjsp/NodeJS-Proyect2.git"
+  },
   "author": "Robert Santos",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rsdjsp/NodeJS-Proyect2/issues"
+  },
+  "homepage": "https://github.com/Rsdjsp/NodeJS-Proyect2#readme",
   "dependencies": {
+    "@google-cloud/storage": "^5.18.2",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

@@ -1,18 +1,17 @@
-const { env } = require("../config")
+const { env } = require("../config");
 
-function tokenToCookie(res,data){
-    if(data.success){
-        let date = new Date(new Date().setDate(new Date().getDate()+7))
-        return res.cookie("token",data.token,{
-            httpOnly:true,
-            sameSite:"none",
-            secure:true,
-            //secure:env!=="dev",
-            expires:date
-        }).json(data.data)
-    }
-
-    return res.json(data)    
+function tokenToCookie(res, response) {
+  if (env === "dev") {
+    return res.cookie("token", response.token).json(response);
+  } else {
+    return res
+      .cookie("token", response.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .json(response);
+  }
 }
 
-module.exports = tokenToCookie
+module.exports = tokenToCookie;

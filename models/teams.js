@@ -7,10 +7,6 @@ const teamSchema = new Schema({
   img: String,
   description: String,
   creator: String,
-  leader: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
-  },
   members: [
     {
       user: {
@@ -19,7 +15,7 @@ const teamSchema = new Schema({
       },
       role: {
         type: String,
-        enum: ["editor", "validator", "normal", "leader"],
+        enum: ["editor", "normal", "leader"],
         default: "normal",
       },
     },

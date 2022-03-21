@@ -27,6 +27,7 @@ const config = {
     process.env.NODE_ENV === "dev"
       ? process.env.EMAIL_DEV_URL_REDIRECT
       : process.env.EMAIL_URL_REDIRECT,
+  bucket_name: process.env.BUCKET_NAME
 };
 
 module.exports = config;

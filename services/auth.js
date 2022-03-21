@@ -56,7 +56,7 @@ class Auth {
         userData.email,
         "Registro exitoso",
         "Bienvenido a la aplicación",
-        `<div><h1><em>Bienvenido</em> a la aplicación</h1><br/><a href="${email_redirect_url}/${userData.email}/${userToken}"><button >Verify Email</button></a><br/><p>this links expires in 24 hours</p></div>`
+        `<div><h1><em>Bienvenido</em> a la aplicación</h1><br/><a href="${email_redirect_url}/auth/${userData.email}/${userToken}"><button >Verify Email</button></a><br/><p>this links expires in 24 hours</p></div>`
       );
       return this.getToken(user);
     }

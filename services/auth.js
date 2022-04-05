@@ -19,11 +19,10 @@ class Auth {
   getToken(user) {
     const data = {
       id: user.id,
-      name: user.firstName,
-      birthday: user.birthday,
-      displayName: user.displayName,
+      name: user.name,
+      birthday: user.birthday ? user.birthday : undefined,
       email: user.email,
-      role: user.role ? user.role : 0,
+      role: user.role ? user.role : 2,
       validateUser: user.validateUser ? user.validateUser : false,
     };
     const token = jwt.sign(data, jwt_secret, { expiresIn: "1d" });
@@ -42,7 +41,7 @@ class Auth {
       }
     }
 
-    return { success: false, message: "Las credenciales no coinciden" };
+    return { success: false, message: "The credentials aren't correct" };
   }
 
   async signup(userData) {
@@ -66,27 +65,26 @@ class Auth {
     let user = await this.users.getByEmail(profile.email);
     if (!user) {
       user = await this.users.create({
-        name: profile.name?.givenName + "" + profile.name?.familyName,
-        email: profile.emails ? profile.emails[0].value : undefined,
-        displayname: profile.displayname ? profile.displayname : undefined,
+        name: profile.displayName,
+        email: profile.emails[0].value,
         role: 0,
         provider: profile.provider,
         idProvider: profile.id,
-        validateUser: profile.validateUser,
+        validateUser: false,
       });
     }
     return this.getToken(user);
   }
 
-  async validateUser(email, userToken) {
-    if (!userToken) {
-      return { success: false, message: "token expired" };
-    } else {
-      const user = await this.users.getByEmail(email);
-      user.validateUser = true;
-      await this.users.update(user._id, user);
-      return { success: true, message: "user active" };
-    }
+    async validateUser(email, userToken) {
+      if (!userToken) {
+        return { success: false, message: "token expired" };
+      } else {
+        const user = await this.users.getByEmail(email);
+        user.validateUser = true;
+        await this.users.update(user._id, user);
+        return { success: true, message: "user active" };
+      }
   }
 }
 

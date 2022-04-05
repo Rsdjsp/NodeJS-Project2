@@ -9,7 +9,8 @@ function task(app) {
   const listService = new List();
 
   router.post("/", isEditor, async (req, res) => {
-    const workList = await listService.create(req.user.id, req.body);
+    const { title, team } = req.body;
+    const workList = await listService.create(req.user.id, title, team);
     res.json(workList);
   });
 

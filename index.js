@@ -9,6 +9,7 @@ const teams = require("./routes/teams");
 const task = require("./routes/task");
 const list = require("./routes/list");
 const comments = require("./routes/comments");
+const users = require("./routes/users");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(
 app.use(cookies());
 
 const { connection } = require("./config/db");
+const images = require("./routes/images");
 
 connection();
 
@@ -31,6 +33,8 @@ teams(app);
 task(app);
 list(app);
 comments(app);
+images(app);
+users(app);
 
 app.get("/", (req, res) => {
   return res.json({ hello: "world" });

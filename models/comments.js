@@ -8,7 +8,10 @@ const commentsSchema = new Schema({
     default: new Date(),
   },
   creator: String,
-  idList: String,
+  idTask: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "task",
+  },
 });
 
 const CommentsModel = mongoose.model("comments", commentsSchema);

@@ -1,6 +1,7 @@
 const TeamModel = require("../models/teams");
 const UserModel = require("../models/user");
 const sendEmail = require("../libs/email");
+const ImagesModel = require("../models/images");
 
 class Teams {
   async create(idLeader, data) {
@@ -10,6 +11,12 @@ class Teams {
       members: { user: idLeader, role: "leader" },
     };
     const team = await TeamModel.create(newTeam);
+    const addTeam = await UserModel.updateOne(
+      { _id: idLeader },
+      {
+        $push: { teams: team._id },
+      }
+    );
     return team;
   }
 
@@ -21,45 +28,54 @@ class Teams {
   }
 
   async get(idTeam) {
-    const team = await TeamModel.find({ _id: idTeam }).populate("members.user", "name email")
-    return team[0]
+    const team = await TeamModel.find({ _id: idTeam }).populate(
+      "members.user",
+      "name email"
+    );
+    return team[0];
+  }
+
+  async deleteTeam(idTeam, idUser) {
+    
   }
 
 
-
-
-  async addMember(idTeam, idNewMember) {
+  async addMember(idTeam, idNewMember, idSendInvit) {
     const searchTeam = await TeamModel.findById(idTeam);
+    const newUser = await UserModel.findById(idNewMember);
     const verify = searchTeam.members.find(
       (user) => user.user.toString() === idNewMember
     );
     if (!verify) {
       const result = await TeamModel.updateOne(
         { _id: idTeam },
-        { $push: { members: { user: idNewMember } } }
+        {
+          $push: { members: { user: idNewMember } },
+        }
       );
-      return result;
+      const addTeam = await UserModel.updateOne(
+        { _id: idNewMember },
+        {
+          $push: { teams: idTeam },
+        }
+      );
+      return this.inviteuser(newUser.email, idSendInvit);
     } else {
       return { error: "This user has already been registered " };
     }
   }
 
-  async inviteuser(userEmail,userId) {
-    if (await UserModel.getByEmail(userEmail)) {
-      return { succes: false, message: "Usuario ya registrado" };
-    } else {
-      const invited = await UserModel.findById(userId)
-      const host = invited.name
-      await sendEmail(
-        userData.email,
-        "Unete al Equipo!",
-        `<div><h1><em>${host}</em> te ha invitado a unirte a su equipo</h1><br/><a href="${email_redirect_url}/auth/login"><button >ir a la APP</button></a></div>`
-      );
-      return {succes:"user Invited"}
-    }
+  async inviteuser(userEmail, userId) {
+    const invited = await UserModel.findById(userId);
+    const host = invited.name;
+    await sendEmail(
+      userEmail,
+      "Unete al Equipo!",
+      "WorkFlow APP",
+      `<div><h1><em>${host}</em> te ha invitado a unirte a su equipo</h1><br/><a href="http://localhost:3000/login/"><button >Go to the APP</button></a></div>`
+    );
+    return { succes: "user Invited" };
   }
-  
-
 
   async changeRole(idTeam, idMember, newRole, userId) {
     const searchTeam = await TeamModel.findById(idTeam);
@@ -80,16 +96,40 @@ class Teams {
 
   async deleteMember(idTeam, idMember) {
     const searchTeam = await TeamModel.findById(idTeam);
+    const searchUser = await UserModel.findById(idMember);
+    const verfTeam = await searchUser.teams.find(
+      (team) => team.toString() === idTeam
+    );
     const verify = searchTeam.members.find(
       (user) => user.user.toString() === idMember
     );
-    if (verify) {
+    if (verify && verfTeam) {
       searchTeam.members.pull(verify);
       const eliminated = await searchTeam.save();
-      return eliminated;
+      searchUser.teams.pull(verfTeam);
+      const deleted = await searchUser.save();
+      return { eliminated, deleted };
     } else {
       return { error: "this user dosen't exist" };
     }
+  }
+
+  async getOne(teamId) {
+    const team = await TeamModel.findById(teamId);
+    return team;
+  }
+
+  async getImages() {
+    const images = await ImagesModel.find({});
+    return images;
+  }
+
+  async updateImage(url, idTeam) {
+    const newImg = await TeamModel.updateOne(
+      { _id: idTeam },
+      { $set: { img: url } }
+    );
+    return newImg;
   }
 }
 

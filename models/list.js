@@ -14,6 +14,7 @@ const listSchema = new Schema({
       ref: "task",
     },
   ],
+  team: String,
 });
 
 const ListModel = mongoose.model("list", listSchema);

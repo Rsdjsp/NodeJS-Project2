@@ -3,6 +3,7 @@ const {
   useGoogleStrategy,
   useFacebookStrategy,
   useGitHubStrategy,
+  isRegular,
 } = require("../middleware/auth");
 const passport = require("passport");
 
@@ -38,7 +39,7 @@ function auth(app) {
 
   router.post("/signup", async (req, res) => {
     const user = req.body;
-    !user.role && (user.role = 0);
+    !user.role && (user.role = 2);
     !user.validateUser && (user.validateUser = false);
     const response = await authService.signup(user);
     return tokenToCookie(res, response);
@@ -55,6 +56,10 @@ function auth(app) {
       .json({ loggedOut: true });
   });
 
+  router.get("/validate", isRegular, (req, res) => {
+    return res.json({ logged: true, user: req.user });
+  });
+
   router.get(
     "/google",
     passport.authenticate("google", {
@@ -66,6 +71,7 @@ function auth(app) {
     "/google/callback",
     passport.authenticate("google"),
     async (req, res) => {
+      console.log(req.user.profile);
       const response = await authService.loginProvider(req.user.profile);
       return tokenToCookie(res, response);
     }

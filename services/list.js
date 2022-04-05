@@ -1,8 +1,8 @@
 const ListModel = require("../models/list");
 
 class List {
-    async create(userId, data) {
-    const newList = { ...data, creator: userId };
+  async create(userId, title, idTeam) {
+    const newList = { title:title, creator: userId, team: idTeam };
     const response = await ListModel.create(newList);
     return response;
   }
@@ -10,8 +10,9 @@ class List {
   async getList() {
     const workList = await ListModel.find({}).populate(
       "tasks",
-      "title description state idCreator usermodify"
-    ).populate("comments","comment creator");
+      "title description"
+    );
+
     return workList;
   }
 

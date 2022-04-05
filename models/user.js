@@ -11,6 +11,12 @@ const userSchema = new Schema({
   provider: String,
   idProvider: String,
   validateUser: Boolean,
+  teams: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "teams",
+    },
+  ],
 });
 
 const UserModel = mongoose.model("users", userSchema);

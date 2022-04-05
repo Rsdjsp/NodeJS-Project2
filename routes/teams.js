@@ -3,6 +3,7 @@ const { isRegular } = require("../middleware/auth");
 const { uploadFile } = require("../libs/storage");
 const upload = require("../middleware/upload");
 
+
 const Teams = require("../services/teams");
 
 function teams(app) {
@@ -18,6 +19,12 @@ function teams(app) {
 
   router.get("/:id", isRegular, async (req, res) => {
     const { id } = req.params;
+    const team = await teamsService.getOne(id);
+    return res.json(team);
+  });
+
+  router.get("/:id", isRegular, async (req, res) => {
+    const { id } = req.params;
     const teams = await teamsService.get(id);
     return res.json(teams);
   });
@@ -29,11 +36,17 @@ function teams(app) {
 
   router.post("/addMember", isRegular, async (req, res) => {
     const { idTeam, idNewMember } = req.body;
-    const team = await teamsService.addMember(idTeam, idNewMember);
+    const team = await teamsService.addMember(idTeam, idNewMember, req.user.id);
     return res.json(team);
   });
 
-  router.delete("/deleteMember", isRegular, async (req, res) => {
+  router.post("/newMember", isRegular, async (req, res) => {
+    const { email } = req.body;
+    const member = await teamsService.inviteuser(email,req.user.id)
+    return res.json(member)
+  })
+
+  router.post("/deleteMember", isRegular, async (req, res) => {
     const { idTeam, idMember } = req.body;
     const team = await teamsService.deleteMember(idTeam, idMember);
     return res.json(team);
@@ -57,6 +70,15 @@ function teams(app) {
     return res.json({ success: true });
   });
 
+  router.post("/updateImg", isRegular, async (req, res) => {
+    const { url, idTeam } = req.body;
+    const update = await teamsService.updateImage(url, idTeam);
+    return res.json(update);
+  });
+
+  router.post("/deleteTeam", isRegular, async (req, res) => {
+   
+ })
 
 }
 

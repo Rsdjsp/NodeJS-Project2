@@ -76,16 +76,16 @@ class Auth {
     return this.getToken(user);
   }
 
-    async validateUser(email, userToken) {
-      if (!userToken) {
-        return { success: false, message: "token expired" };
-      } else {
-        const user = await this.users.getByEmail(email);
-        user.validateUser = true;
-        await this.users.update(user._id, user);
-        return { success: true, message: "user active" };
-      }
-  }
+  //   async validateUser(email, userToken) {
+  //     if (!userToken) {
+  //       return { success: false, message: "token expired" };
+  //     } else {
+  //       const user = await this.users.getByEmail(email);
+  //       user.validateUser = true;
+  //       await this.users.update(user._id, user);
+  //       return { success: true, message: "user active" };
+  //     }
+  // }
 }
 
 module.exports = Auth;

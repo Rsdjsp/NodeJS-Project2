@@ -1,6 +1,12 @@
 const TaskModel = require("../models/task");
+const List = require("./list");
+
 
 class Task {
+  constructor() {
+    this.list = new List();
+  }
+
   async getAll() {
     const listTasks = TaskModel.find({}).populate("users", "name email");
     return listTasks;
@@ -9,7 +15,8 @@ class Task {
   async create(userId, data) {
     const newTask = { ...data, idCreator: userId };
     const task = await TaskModel.create(newTask);
-    return task;
+    const add = await this.list.addTask(task._id, data.idList);
+    return { add, task };
   }
 
   async add(member, taskID) {
@@ -25,11 +32,6 @@ class Task {
       { _id: idTask },
       { $pull: { users: idUser } }
     );
-    return result;
-  }
-
-  async deleteTask(idTask) {
-    const result = await TaskModel.findByIdAndDelete(idTask);
     return result;
   }
 

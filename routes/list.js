@@ -18,6 +18,10 @@ function task(app) {
     const workList = await listService.getList();
     res.json(workList);
   });
+  router.get("/:id", isRegular, async (req, res) => {
+    const workList = await listService.getByTeam(req.params.id);
+    res.json(workList);
+  });
 
   router.post("/newTask", isRegular, async (req, res) => {
     const { task, idList } = req.body;
@@ -25,13 +29,13 @@ function task(app) {
     res.json(newTask);
   });
 
-  router.delete("/deleteTask", isRegular, async (req, res) => {
+  router.post("/deleteTask", isRegular, async (req, res) => {
     const { task, idList } = req.body;
     const deleteTask = await listService.delete(task, idList);
     res.json(deleteTask);
   });
 
-  router.delete("/", isEditor, async (req, res) => {
+  router.post("/deleteList", isEditor, async (req, res) => {
     const { idList } = req.body;
     const deleteList = await listService.deleteList(idList);
     res.json(deleteList);

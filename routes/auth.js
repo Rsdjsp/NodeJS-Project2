@@ -25,11 +25,11 @@ function auth(app) {
     done(null, user);
   });
 
-  router.get("/:email/:usertoken", async (req, res) => {
-    const { email, usertoken } = req.params;
-    const response = await authService.validateUser(email, usertoken);
-    return res.status(200).json(response);
-  });
+  // router.get("/:email/:usertoken", async (req, res) => {
+  //   const { email, usertoken } = req.params;
+  //   const response = await authService.validateUser(email, usertoken);
+  //   return res.status(200).json(response);
+  // });
 
   router.post("/login", async (req, res) => {
     const { email, password } = req.body;

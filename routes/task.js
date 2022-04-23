@@ -13,12 +13,12 @@ function task(app) {
     return res.json(tasks);
   });
 
-  router.get("/", async (req, res) => {
+  router.get("/",isRegular, async (req, res) => {
     const tasks = await taskService.getAll();
     return res.json(tasks);
   });
 
-  router.get("/:id/user", isRegular, async (req, res) => {
+   router.get("/:id/user", isRegular, async (req, res) => {
     const { id } = req.params;
     const tasks = await taskService.list(id);
     return res.json(tasks);

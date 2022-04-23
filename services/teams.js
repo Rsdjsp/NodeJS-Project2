@@ -35,10 +35,7 @@ class Teams {
     return team[0];
   }
 
-  async deleteTeam(idTeam, idUser) {
-    
-  }
-
+  
 
   async addMember(idTeam, idNewMember, idSendInvit) {
     const searchTeam = await TeamModel.findById(idTeam);
